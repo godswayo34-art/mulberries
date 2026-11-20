@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Mulberries School - Teacher Portal</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Arial}
+  body{background:#F3EAFD;min-height:100vh}
+  header{background:#5B2A86;color:white;padding:20px;text-align:center;position:sticky;top:0;z-index:10}
+  nav{text-align:center;padding:12px;background:white;box-shadow:0 2px 10px rgba(0,0,0,0.08)} nav a{color:#5B2A86;text-decoration:none;margin:4px;font-weight:700;background:#F3EAFD;padding:8px 14px;border-radius:20px;font-size:13px;display:inline-block}
+  .wrap{max-width:900px;margin:20px auto;padding:0 15px}
+  .glass{background:white;border-radius:20px;padding:22px;color:#333;box-shadow:0 10px 30px rgba(91,42,134,0.12);margin-bottom:18px} .glass h2,.glass h3{color:#5B2A86}
+  input,select,textarea{width:100%;padding:12px;margin:7px 0;border:1px solid #DDD;border-radius:12px;background:#fff;outline:none;font-size:14px}
+  label{font-size:13px;font-weight:700;color:#5B2A86}
+  .btn{width:100%;padding:13px;border:none;border-radius:12px;cursor:pointer;font-size:15px;font-weight:bold;color:white;margin-top:8px;background:#5B2A86} .btn.green{background:#00A651} .btn.orange{background:#FF8A00} .btn.red{background:#D32F2F} .btn.purple{background:#7B2CBF} .btn.dark{background:#333} .btn.gold{background:#B8860B}
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px} .tabs button{flex:1;min-width:110px;padding:11px;border:none;border-radius:12px;background:#EDE7F6;font-weight:bold;cursor:pointer;color:#5B2A86} .tabs button.active{background:#5B2A86;color:white}
+  .card{background:#F9F5FF;padding:12px;border-radius:12px;margin:8px 0;display:flex;justify-content:space-between;align-items:center;gap:10px;border:1px solid #EDE7F6;flex-wrap:wrap}
+  .small-btn{padding:7px 10px;border:none;border-radius:8px;cursor:pointer;font-weight:bold;color:white;font-size:12px}
+  .hidden{display:none !important} .badge{display:inline-block;padding:5px 12px;border-radius:20px;background:#FFD93D;color:#000;font-size:12px;font-weight:bold}
+  .gallery{display:flex;gap:10px;flex-wrap:wrap} .gallery img{flex:1;min-width:120px;height:110px;object-fit:cover;border-radius:12px}
+  .row{display:flex;gap:10px;flex-wrap:wrap} .row>div{flex:1;min-width:140px}
+  .table-wrap{overflow-x:auto;margin-top:12px} table{width:100%;border-collapse:collapse;min-width:750px;background:white} th,td{padding:10px;text-align:left;font-size:13px;border:1px solid #EDE7F6} th{background:#5B2A86;color:white}
+  .grade-A{background:#D4EDDA;font-weight:bold;color:#155724;text-align:center} .grade-B{background:#D1ECF1;font-weight:bold;color:#0C5460;text-align:center} .grade-C{background:#FFF3CD;font-weight:bold;color:#856404;text-align:center} .grade-F{background:#F8D7DA;font-weight:bold;color:#721C24;text-align:center}
+  .total-box{background:#F3EAFD;padding:12px;border-radius:12px;margin-top:10px;font-weight:bold;color:#5B2A86;text-align:center}
+  .add-box{background:#FFF8E1;border:2px solid #FFD93D;border-radius:16px;padding:16px}
+  .add-box-finance{background:#E8F5E9;border:2px solid #00A651;border-radius:16px;padding:16px}
+  .add-box-head{background:#FFF8E1;border:2px solid #B8860B;border-radius:16px;padding:16px}
+  .stats{display:flex;gap:12px;flex-wrap:wrap;margin:14px 0} .stat{flex:1;min-width:140px;background:white;border-radius:16px;padding:16px;text-align:center;box-shadow:0 5px 15px rgba(0,0,0,0.06);border:1px solid #EDE7F6} .stat small{color:#888} .stat h2{font-size:28px;color:#5B2A86;margin:6px 0}
+  .subject-chip{display:inline-block;background:#5B2A86;color:white;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:bold;margin:2px}
+  .chip-box{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+  .chip{padding:8px 12px;border-radius:20px;border:2px solid #EDE7F6;background:white;cursor:pointer;font-size:13px;font-weight:600} .chip.selected{background:#5B2A86;color:white;border-color:#5B2A86}
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:50;opacity:0;pointer-events:none;transition:0.4s} .overlay.show{opacity:1;pointer-events:auto}
+  .drawer{position:fixed;top:0;right:0;height:100%;width:100%;max-width:380px;background:white;z-index:60;padding:30px 22px;transform:translateX(100%);transition:transform 0.45s ease;box-shadow:-10px 0 30px rgba(0,0,0,0.2);overflow-y:auto} .drawer.open{transform:translateX(0)} .close{position:absolute;top:15px;right:18px;font-size:24px;cursor:pointer;border:none;background:none}
+  .floating{position:fixed;bottom:20px;right:20px;z-index:40;width:60px;height:60px;border-radius:50%;border:none;font-size:24px;background:#5B2A86;color:white;box-shadow:0 10px 25px rgba(0,0,0,0.3);cursor:pointer}
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:80;display:none;align-items:center;justify-content:center;padding:15px} .modal.show{display:flex} .modal-box{background:white;width:100%;max-width:420px;border-radius:20px;padding:22px;max-height:85vh;overflow-y:auto}
+  .subj-item{padding:12px;border:1px solid #EDE7F6;border-radius:12px;margin:6px 0;cursor:pointer;display:flex;justify-content:space-between;align-items:center} .subj-item:hover{background:#F3EAFD}
+  @media print{ header,nav,.tabs,.floating,.no-print{display:none !important} body{background:white} .glass{box-shadow:none} }
+</style>
+</head>
+<body>
+<header><h1>MULBERRIES SCHOOL</h1><p>Teacher Portal - Creche to JHS 3</p></header>
+<nav><a href="index.html">Home</a><a href="about.html">About</a><a href="courses.html">Courses</a><a href="teachers.html">Teachers</a><a href="gallery.html">Gallery</a><a href="contact.html">Contact</a></nav>
+
+<div class="wrap">
+  <div class="glass" id="welcomeBox">
+    <h2>Welcome to Mulberries School Portal</h2><p>Please login to see your dashboard.</p>
+    <br><button class="btn" onclick="openLogin()">Login with Email - Slide In</button>
+    <p style="font-size:13px;color:#777;margin-top:12px;">If you do not have login, ask Admin or Headmaster to create one for you.</p>
+    <br><h3>Our School - Real Photos</h3><br>
+    <div class="gallery"><img src="photo1.jpg" onerror="this.src='https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=600&q=80'"><img src="photo2.jpg" onerror="this.src='https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&q=80'"><img src="photo3.jpg" onerror="this.src='https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80'"></div>
+  </div>
+
+  <div class="glass hidden" id="dashboard">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+      <div><h2 id="dashTitle">Dashboard</h2><p id="welcomeEmail"></p><span class="badge" id="roleBadge">ADMIN</span> <span class="badge" id="classBadge" style="background:#EDE7F6;">No Class</span></div>
+      <button onclick="openLogout()" class="no-print" style="background:#D32F2F;color:white;border:none;padding:10px 14px;border-radius:20px;cursor:pointer;font-weight:bold;">Logout</button>
+    </div>
+
+    <!-- OVERALL - NO Balance Owing -->
+    <div style="background:#F3EAFD;padding:16px;border-radius:16px;margin-top:16px;" id="overallBox">
+      <h3 style="text-align:center;" id="overallTitle">MULBERRIES SCHOOL - OVERALL</h3>
+      <div id="overallAdmin">
+        <div class="stats">
+          <div class="stat"><small>Total Teachers</small><h2 id="overallTeachers">0</h2></div>
+          <div class="stat"><small>Total Students</small><h2 id="overallStudents">0</h2></div>
+          <div class="stat"><small>Fees Collected</small><h2 id="overallPaid" style="color:#00A651;">GH₵0</h2></div>
+        </div>
+        <div class="total-box" style="background:white;">Total Fees Expected: <span id="overallExpected">GH₵0</span> &nbsp; | &nbsp; Reports: <span id="overallReports">0</span></div>
+      </div>
+      <div id="overallFinance" class="hidden">
+        <div class="stats">
+          <div class="stat"><small>Total Students</small><h2 id="overallFinanceStudents">0</h2></div>
+          <div class="stat"><small>Fees Collected</small><h2 id="overallFinancePaid" style="color:#00A651;">GH₵0</h2></div>
+        </div>
+        <div class="total-box" style="background:white;">Total Fees Expected: <span id="overallFinanceExpected">GH₵0</span></div>
+      </div>
+      <div id="overallTeacher" class="hidden">
+        <div class="stats">
+          <div class="stat"><small>Total Students</small><h2 id="overallTeacherStudents">0</h2></div>
+          <div class="stat"><small>Reports</small><h2 id="overallTeacherReports">0</h2></div>
+        </div>
+      </div>
+      <!-- HEADMASTER OVERALL - Total Student, Total Fees, Total Teacher + Finance -->
+      <div id="overallHeadmaster" class="hidden">
+        <div class="stats">
+          <div class="stat"><small>Total Students</small><h2 id="overallHeadStudents">0</h2></div>
+          <div class="stat"><small>Total Teachers</small><h2 id="overallHeadTeachers">0</h2></div>
+          <div class="stat"><small>Total Fees</small><h2 id="overallHeadTotalFees">GH₵0</h2></div>
+          <div class="stat"><small>Fees Collected</small><h2 id="overallHeadPaid" style="color:#00A651;">GH₵0</h2></div>
+        </div>
+        <div class="stats" style="margin-top:0;">
+          <div class="stat"><small>Present Today</small><h2 id="overallHeadPresent" style="color:#00A651;">0</h2></div>
+          <div class="stat"><small>Absent Today</small><h2 id="overallHeadAbsent" style="color:#D32F2F;">0</h2></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabs no-print" id="mainTabs">
+      <button id="btn-teachers" onclick="showTab('teachers')">Teachers</button>
+      <button id="btn-headmasters" onclick="showTab('headmasters')">Headmasters</button>
+      <button id="btn-financePersons" onclick="showTab('financePersons')">Finance Persons</button>
+      <button id="btn-classFees" onclick="showTab('classFees')">Class Fees</button>
+      <button id="btn-admit" onclick="showTab('admit')">Admit Student</button>
+      <button id="btn-students" onclick="showTab('students')">Students</button>
+      <button id="btn-attendance" onclick="showTab('attendance')">Attendance</button>
+      <button id="btn-finance" onclick="showTab('finance')">Finance - Paid and Balance</button>
+      <button id="btn-report" onclick="showTab('report')">Report Table</button>
+      <button id="btn-mySubjects" onclick="showTab('mySubjects')">My Subjects</button>
+    </div>
+
+    <div id="tab-teachers" class="hidden">
+      <div class="add-box"><h3>ADD TEACHER - GIVE CLASS - ADD SUBJECTS</h3><label>Teacher Name *</label><input type="text" id="tName" placeholder="e.g. Madam Ama"><label>Teacher Email *</label><input type="email" id="tEmail" placeholder="e.g. ama@gmail.com"><label>Password *</label><input type="text" id="tPass" placeholder="e.g. Ama-Teach-2026"><label>GIVE THIS TEACHER A CLASS</label><select id="tClass"><option value="">-- No Class (Reports Only) --</option></select><label>ADD SUBJECTS THEY TEACH</label><div class="chip-box" id="teacherSubjectChips"></div><p style="font-size:12px;color:#777;">Selected: <span id="selectedTeacherSubjects" style="font-weight:bold;color:#5B2A86;">None yet</span></p><label>Or Type Other Subject</label><input type="text" id="tSubjectExtra" placeholder="e.g. Twi, French - comma separated"><button class="btn purple" onclick="addTeacher()">ADD TEACHER - CLASS - SUBJECTS</button></div>
+      <h3 style="margin-top:18px;">All Teachers - Class and Subjects</h3><div id="teacherList"></div>
+    </div>
+
+    <div id="tab-headmasters" class="hidden">
+      <div class="add-box-head">
+        <h3>ADD HEADMASTER</h3>
+        <label>Headmaster Name *</label><input type="text" id="hName" placeholder="e.g. Mr. Headmaster Kwame">
+        <label>Headmaster Email *</label><input type="email" id="hEmail" placeholder="e.g. headmaster@mulberries.edu.gh">
+        <label>Password *</label><input type="text" id="hPass" placeholder="e.g. Head-2026-Secure">
+        <label>Phone</label><input type="text" id="hPhone" placeholder="e.g. 055 000 0000">
+        <button class="btn gold" onclick="addHeadmaster()">ADD HEADMASTER</button>
+      </div>
+      <h3 style="margin-top:18px;">All Headmasters</h3><div id="headmasterList"></div>
+    </div>
+
+    <div id="tab-financePersons" class="hidden">
+      <div class="add-box-finance"><h3>ADD FINANCE PERSON</h3><label>Name *</label><input type="text" id="fName" placeholder="e.g. Mr. Finance Mensah"><label>Email *</label><input type="email" id="fEmail" placeholder="e.g. finance@mulberries.edu.gh"><label>Password *</label><input type="text" id="fPass" placeholder="e.g. Finance-2026-Secure"><label>Phone</label><input type="text" id="fPhone" placeholder="055 000 0000"><button class="btn green" onclick="addFinancePerson()">ADD FINANCE PERSON</button></div>
+      <h3 style="margin-top:18px;">All Finance Persons</h3><div id="financePersonList"></div>
+    </div>
+
+    <div id="tab-classFees" class="hidden">
+      <h3>Set Fees - Creche to JHS 3</h3><div class="row" id="classFeesList" style="margin-top:12px;"></div><button class="btn green no-print" id="saveClassFeesBtn" onclick="saveClassFees()">Save All Class Fees</button><div class="total-box" id="classFeesSummary">Total Classes: -</div>
+      <div class="card"><div><b>Update Old Students Too?</b></div><button class="small-btn" style="background:#FF8A00;" onclick="updateAllStudentsFees()">Update Old Students Too</button></div>
+    </div>
+
+    <div id="tab-admit" class="hidden">
+      <h3>New Student Admission Form</h3>
+      <div class="row"><div><label>Student Full Name *</label><input type="text" id="aName" placeholder="e.g. ATIEMO KWADJO"></div><div><label>Date of Birth</label><input type="date" id="aDob"></div></div>
+      <div class="row"><div><label>Gender</label><select id="aGender"><option>Male</option><option>Female</option></select></div><div><label>Age</label><input type="number" id="aAge" placeholder="e.g. 7"></div></div>
+      <label>CLASS THEY ARE GOING TO * - Creche to JHS 3</label><select id="aClass" onchange="onAdmitClassChange()" style="background:#FFF8E1;border:2px solid #FFD93D;font-weight:bold;font-size:16px;"></select>
+      <p style="font-size:12px;color:#777;">Fee for this class: <b id="admitFeeLabel" style="color:#5B2A86;">GH₵0</b></p>
+      <div class="row"><div><label>Guardian / Parent Full Name *</label><input type="text" id="aGuardian" placeholder="e.g. Mr. Atiemo Mensah"></div><div><label>Parent Phone *</label><input type="text" id="aPhone" placeholder="055 000 0000"></div></div>
+      <div class="row"><div><label>Parent / Guardian Occupation</label><input type="text" id="aOccupation" placeholder="e.g. Trader, Teacher"></div><div><label>Home Address</label><input type="text" id="aAddress" placeholder="e.g. Accra, Madina"></div></div>
+      <div class="row"><div><label>Previous School (if any)</label><input type="text" id="aPrevSchool" placeholder="e.g. Little Angels"></div><div><label>Previous Class</label><input type="text" id="aPrevClass" placeholder="e.g. KG 2"></div></div>
+      <div class="row"><div><label>Medical / Health Note (Optional)</label><input type="text" id="aMedical" placeholder="e.g. Asthma, Allergies, None"></div><div><label>Emergency Contact</label><input type="text" id="aEmergency" placeholder="e.g. 055 111 2222 - Auntie Ama"></div></div>
+      <div class="row"><div><label>Total Fees (GH₵) - Auto from Class</label><input type="number" id="aFees" value="500"></div><div><label>Amount Paid on Admission (GH₵)</label><input type="number" id="aPaid" value="0"></div></div>
+      <div class="row"><div><label>Admission Date</label><input type="date" id="aAdmDate"></div><div><label>Admission Number (Optional)</label><input type="text" id="aAdmNo" placeholder="e.g. MUL-001"></div></div>
+      <label>Headmaster's Note</label><input type="text" id="aNote" placeholder="e.g. Admitted by Headmaster - Good student">
+      <button class="btn gold" onclick="admitStudent()">ADMIT STUDENT - Save to School</button>
+      <h3 style="margin-top:18px;">Recently Admitted Students</h3><div id="admittedList"></div>
+    </div>
+
+    <div id="tab-students">
+      <h3>Quick Add Student</h3>
+      <label>Student Full Name</label><input type="text" id="sName" placeholder="e.g. ATIEMO KWADJO">
+      <label>Class - Creche to JHS 3</label><select id="sClass" onchange="onClassChange()"></select>
+      <div class="row"><div><label>Guardian Name</label><input type="text" id="sGuardian" placeholder="Parent Name"></div><div><label>Parent Phone</label><input type="text" id="sPhone" placeholder="055 000 0000"></div></div>
+      <div class="row" id="studentFeesRow"><div><label>Total Fees (GH₵) - Auto</label><input type="number" id="sFees" value="500"></div><div><label>Amount Paid (GH₵)</label><input type="number" id="sPaid" value="0"></div></div>
+      <button class="btn green" id="addStudentBtn" onclick="addStudent()">Add Student</button>
+      <h3 style="margin-top:18px;">Student List (<span id="studentCount">0</span>)</h3>
+      <div id="studentList"></div>
+    </div>
+
+    <div id="tab-attendance" class="hidden">
+      <div id="attendanceMarkSection">
+        <h3>Mark Attendance - Today - <span id="attClassLabel"></span></h3><div id="attendanceList"></div><button class="btn green" onclick="saveAttendance()">Save Attendance</button><p id="attMsg" style="color:green;margin-top:10px;"></p>
+      </div>
+      <div id="headmasterAttendanceSummary" class="hidden">
+        <h3>Present and Absent by Class</h3>
+        <div class="table-wrap"><table><thead><tr><th>Class</th><th>Total Students</th><th>Present</th><th>Absent</th></tr></thead><tbody id="attendanceSummaryTable"></tbody></table></div>
+      </div>
+    </div>
+
+    <div id="tab-finance" class="hidden">
+      <div id="financeForm">
+        <h3>Finance - Add School Fees Paid</h3><label>Select Student</label><select id="finStudent"></select>
+        <div class="row"><div><label>Add Payment Amount (GH₵)</label><input type="number" id="finAddAmount" placeholder="e.g. 200"></div><div><label>Payment Date</label><input type="date" id="finDate"></div></div>
+        <label>Receipt / Note</label><input type="text" id="finNote" placeholder="e.g. Cash, MoMo">
+        <button class="btn green" onclick="addPayment()">Add Payment</button>
+      </div>
+      <div class="total-box" id="finSummary">Total Fees: - | Paid: - | Balance: -</div>
+      <h3 style="margin-top:18px;">MULBERRIES SCHOOL - FEES AND BALANCE TABLE</h3>
+      <div class="table-wrap"><table><thead><tr><th>Student</th><th>Class</th><th>Guardian</th><th>Total Fees</th><th>Paid</th><th>Balance</th><th>Status</th><th class="no-print">Action</th></tr></thead><tbody id="financeTable"></tbody></table></div>
+      <div class="row no-print" style="margin-top:12px;"><button class="btn dark" onclick="window.print()">Print / Save as PDF</button></div>
+      <h3 style="margin-top:16px;">Payment History</h3><div id="paymentHistory"></div>
+    </div>
+
+    <div id="tab-report" class="hidden">
+      <div class="no-print" id="reportForm">
+        <h3>Add Student Report - Click Subject to Choose</h3><label>Select Student</label><select id="rStudent"></select><label>Term</label><select id="rTerm"><option>Term 1</option><option>Term 2</option><option>Term 3</option></select>
+        <label>Subject - Click to Choose from List</label><input type="text" id="rSubject" placeholder="Click here to choose subject from list" readonly onclick="openSubjectPopup()" style="background:#FFF8E1;border:2px solid #FFD93D;cursor:pointer;font-weight:bold;">
+        <div class="chip-box" id="quickSubjects"></div>
+        <div class="row"><div><label>Mid-Term /30</label><input type="number" id="rMid" placeholder="e.g. 25" min="0" max="30" oninput="calcTotal()"></div><div><label>End of Term /70</label><input type="number" id="rEnd" placeholder="e.g. 58" min="0" max="70" oninput="calcTotal()"></div></div>
+        <div class="total-box" id="calcBox">Total: 0 / 100 | Percentage: 0% | Grade: -</div>
+        <label>Teacher's Comment</label><input type="text" id="rTeacherComment" placeholder="e.g. Excellent!"><label>Headmaster's Comment</label><input type="text" id="rHeadComment" placeholder="e.g. Good performance - Promoted"><button class="btn orange" onclick="addReport()">Save Report</button>
+      </div>
+      <h3 style="margin-top:18px;">MULBERRIES SCHOOL - REPORT TABLE</h3>
+      <div class="table-wrap"><table><thead><tr><th>Student</th><th>Term</th><th>Subject</th><th>Mid /30</th><th>End /70</th><th>Total /100</th><th>%</th><th>Grade</th><th>Teacher's Comment</th><th>Headmaster's Comment</th><th class="no-print">Action</th></tr></thead><tbody id="reportTable"></tbody></table></div>
+      <div class="total-box" id="classAverage">Class Average: -</div>
+      <div class="row no-print" style="margin-top:12px;"><button class="btn dark" onclick="window.print()">Print Report</button><button class="btn red" onclick="clearReports()">Clear Reports</button></div>
+    </div>
+
+    <div id="tab-mySubjects" class="hidden">
+      <h3>My Subjects - What I Teach</h3>
+      <div class="card" style="display:block;"><label>Tick Subjects You Teach</label><div class="chip-box" id="mySubjectChips"></div><label>Or Type New Subject</label><input type="text" id="myNewSubject" placeholder="e.g. Twi"><button class="btn purple" onclick="saveMySubjects()">Save My Subjects</button></div>
+      <h3>Your Subjects Now:</h3><div id="mySubjectsList"></div>
+      <h3 style="margin-top:16px;">All Subjects in School:</h3><div id="allSubjectsList"></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="subjectModal"><div class="modal-box"><div style="display:flex;justify-content:space-between;align-items:center;"><h3 style="color:#5B2A86;">Choose Subject</h3><button class="close" style="position:static;" onclick="closeSubjectPopup()">X</button></div><input type="text" id="subjectSearch" placeholder="Search subject..." oninput="renderSubjectPopup()"><div id="subjectPopupList"></div><label style="margin-top:12px;">Or Type New Subject</label><input type="text" id="subjectCustom" placeholder="e.g. Twi"><button class="btn green" onclick="chooseCustomSubject()">Use This Subject</button></div></div>
+
+<button class="floating no-print" onclick="openLogin()">Login</button>
+<div class="overlay" id="overlay" onclick="closeAll()"></div>
+<div class="drawer" id="loginDrawer"><button class="close" onclick="closeAll()">X</button><h2 style="color:#5B2A86;">Login with Email</h2><p style="color:#666;font-size:14px;">Enter your email and password given by Admin</p><br><label>Email</label><input type="email" id="loginEmail" placeholder="Enter your email"><label>Password</label><input type="password" id="loginPass" placeholder="Enter your password"><button class="btn" onclick="doLogin()">Login</button><p id="loginError" style="color:red;margin-top:10px;"></p></div>
+<div class="drawer" id="logoutDrawer"><button class="close" onclick="closeAll()">X</button><h2 style="color:#5B2A86;">Logout?</h2><p style="color:#666;">Enter your logout passcode</p><br><label>Logout Passcode</label><input type="password" id="logoutPass" placeholder="Your password"><button class="btn red" onclick="doLogout()">Confirm Logout</button><button class="btn" style="background:#eee;color:#333;" onclick="closeAll()">Cancel</button><p id="logoutError" style="color:red;margin-top:10px;"></p></div>
+
+<script>
+const LOGINS = {
+  admin: { email: "admin@mulberries.edu.gh", pass: "Mulberries-Admin-2026" },
+  headmaster: { email: "headmaster@mulberries.edu.gh", pass: "Mulberries-Head-2026" },
+  finance: { email: "finance@mulberries.edu.gh", pass: "Mulberries-Finance-2026" },
+  teacherWithClass: { email: "teacher@mulberries.edu.gh", pass: "Mulberries-Teach-2026" },
+  teacherNoClass: { email: "ama@mulberries.edu.gh", pass: "Mulberries-Ama-2026" }
+};
+let ALL_CLASSES = ["Creche","Nursery 1","Nursery 2","KG 1","KG 2","Class 1","Class 2","Class 3","Class 4","Class 5","Class 6","JHS 1","JHS 2","JHS 3"];
+let ALL_SUBJECTS = ["English Language","Mathematics","Science","Social Studies","ICT / Computing","Creative Arts","R.M.E","French","Twi / Ghanaian Language","Reading","Writing","Phonics","Numeracy","Physical Education","Music","Art","History","Geography","Agriculture","Home Economics","Pre-Tech","Career Tech","Health & Safety","Moral Education","Handwriting","Drawing","Rhymes & Songs"];
+let classFees = JSON.parse(localStorage.getItem('mul_classFees_v2') || '{"Creche":400,"Nursery 1":450,"Nursery 2":500,"KG 1":550,"KG 2":600,"Class 1":800,"Class 2":850,"Class 3":900,"Class 4":1000,"Class 5":1100,"Class 6":1200,"JHS 1":1500,"JHS 2":1600,"JHS 3":1700}');
+let teachers = JSON.parse(localStorage.getItem('mul_teachers_v5') || JSON.stringify([{name:"Mr. Kwame - Class 6 Teacher",email:LOGINS.teacherWithClass.email,pass:LOGINS.teacherWithClass.pass,subject:"Maths",subjects:["Mathematics","Science"],assignedClass:"Class 6"},{name:"Madam Ama - No Class",email:LOGINS.teacherNoClass.email,pass:LOGINS.teacherNoClass.pass,subject:"English",subjects:["English Language","Reading"],assignedClass:""}]));
+let headmasters = JSON.parse(localStorage.getItem('mul_head_v1') || JSON.stringify([{name:"Mr. Headmaster Kwame",email:LOGINS.headmaster.email,pass:LOGINS.headmaster.pass,phone:"055 000 0000"}]));
+let financePersons = JSON.parse(localStorage.getItem('mul_finance_v1') || JSON.stringify([{name:"Mr. Finance Mensah",email:LOGINS.finance.email,pass:LOGINS.finance.pass,phone:"055 000 0000"}]));
+let students = JSON.parse(localStorage.getItem('mul_students_v5') || '[{"name":"ATIEMO KWADJO","cls":"Class 6","guardian":"Mr. Atiemo","phone":"055 000 0000","fees":1200,"paid":500,"balance":700,"dob":"","gender":"Male","age":"","occupation":"","address":"","prevSchool":"","prevClass":"","medical":"","emergency":"","admNo":"","note":""}]');
+let reports = JSON.parse(localStorage.getItem('mul_reports_v2') || '[]');
+let payments = JSON.parse(localStorage.getItem('mul_payments_v1') || '[]');
+let attendance = JSON.parse(localStorage.getItem('mul_attendance_v1') || '{}');
+let currentUser=null, currentRole='', currentTeacher=null, currentFinance=null, currentHead=null;
+let tempTeacherSubjects=[]; let tempMySubjects=[];
+function saveAll(){ localStorage.setItem('mul_classFees_v2', JSON.stringify(classFees)); localStorage.setItem('mul_teachers_v5', JSON.stringify(teachers)); localStorage.setItem('mul_head_v1', JSON.stringify(headmasters)); localStorage.setItem('mul_finance_v1', JSON.stringify(financePersons)); localStorage.setItem('mul_students_v5', JSON.stringify(students)); localStorage.setItem('mul_reports_v2', JSON.stringify(reports)); localStorage.setItem('mul_payments_v1', JSON.stringify(payments)); localStorage.setItem('mul_attendance_v1', JSON.stringify(attendance)); }
+function hasClass(){ return currentRole==='ADMIN' || (currentRole==='TEACHER' && currentTeacher && currentTeacher.assignedClass); }
+function myClass(){ if(currentRole==='ADMIN') return 'ALL'; if(currentRole==='TEACHER' && currentTeacher) return currentTeacher.assignedClass || ''; return ''; }
+function mySubjects(){ if(currentRole==='TEACHER' && currentTeacher) return currentTeacher.subjects || []; return ALL_SUBJECTS; }
+function allowedTabs(){
+  if(currentRole==='ADMIN') return ['teachers','headmasters','financePersons','classFees','admit','students','attendance','finance','report','mySubjects'];
+  if(currentRole==='HEADMASTER') return ['attendance','classFees'];
+  if(currentRole==='TEACHER'){
+    if(!hasClass()) return ['report'];
+    return ['students','attendance','report'];
+  }
+  if(currentRole==='FINANCE') return ['finance'];
+  return [];
+}
+function canSee(tab){ return allowedTabs().includes(tab); }
+function applyTabVisibility(){
+  let allowed = allowedTabs();
+  ['teachers','headmasters','financePersons','classFees','admit','students','attendance','finance','report','mySubjects'].forEach(t=>{
+    let btn=document.getElementById('btn-'+t);
+    if(btn) btn.style.display = allowed.includes(t) ? 'block' : 'none';
+  });
+  document.getElementById('overallAdmin').classList.toggle('hidden', currentRole!=='ADMIN');
+  document.getElementById('overallFinance').classList.toggle('hidden', currentRole!=='FINANCE');
+  document.getElementById('overallTeacher').classList.toggle('hidden', currentRole!=='TEACHER');
+  document.getElementById('overallHeadmaster').classList.toggle('hidden', currentRole!=='HEADMASTER');
+  let mark=document.getElementById('attendanceMarkSection');
+  let summ=document.getElementById('headmasterAttendanceSummary');
+  if(currentRole==='HEADMASTER'){ if(mark) mark.style.display='none'; if(summ) summ.classList.remove('hidden'); }
+  else { if(mark) mark.style.display='block'; if(summ) summ.classList.add('hidden'); }
+  let feesRow=document.getElementById('studentFeesRow');
+  if(feesRow) feesRow.style.display = currentRole==='TEACHER' ? 'none' : 'flex';
+  let saveBtn=document.getElementById('saveClassFeesBtn');
+  if(saveBtn) saveBtn.style.display = (currentRole==='ADMIN' || currentRole==='FINANCE' || currentRole==='HEADMASTER') ? 'block' : 'none';
+}
+function openLogin(){ document.getElementById('loginDrawer').classList.add('open'); document.getElementById('overlay').classList.add('show'); }
+function openLogout(){ document.getElementById('logoutDrawer').classList.add('open'); document.getElementById('overlay').classList.add('show'); }
+function closeAll(){ document.getElementById('loginDrawer').classList.remove('open'); document.getElementById('logoutDrawer').classList.remove('open'); document.getElementById('overlay').classList.remove('show'); }
+function showTab(tab){
+  if(currentUser && !canSee(tab)){ tab = allowedTabs()[0] || 'students'; }
+  ['teachers','headmasters','financePersons','classFees','admit','students','attendance','finance','report','mySubjects'].forEach(t=>document.getElementById('tab-'+t).classList.add('hidden'));
+  document.getElementById('tab-'+tab).classList.remove('hidden');
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
+  let btn=document.getElementById('btn-'+tab); if(btn) btn.classList.add('active');
+  renderAll();
+}
+function doLogin(){
+  let email=document.getElementById('loginEmail').value.trim().toLowerCase(); let pass=document.getElementById('loginPass').value.trim();
+  if(email===LOGINS.admin.email.toLowerCase() && pass===LOGINS.admin.pass){ currentUser=email; currentRole='ADMIN'; currentTeacher=null; currentFinance=null; currentHead=null; startDashboard('Dashboard','ADMIN'); return; }
+  let h=headmasters.find(t=>t.email.toLowerCase()===email && t.pass===pass);
+  if(h){ currentUser=email; currentRole='HEADMASTER'; currentHead=h; currentTeacher=null; currentFinance=null; startDashboard('Dashboard','HEADMASTER'); return; }
+  let f=teachers.find(t=>t.email.toLowerCase()===email && t.pass===pass);
+  if(f){ currentUser=email; currentRole='TEACHER'; currentTeacher=f; currentFinance=null; currentHead=null; startDashboard('Dashboard','TEACHER'); return; }
+  let fp=financePersons.find(t=>t.email.toLowerCase()===email && t.pass===pass);
+  if(fp){ currentUser=email; currentRole='FINANCE'; currentFinance=fp; currentTeacher=null; currentHead=null; startDashboard('Dashboard','FINANCE'); return; }
+  document.getElementById('loginError').innerText='Wrong email or password!';
+}
+function startDashboard(title,badge){
+  closeAll(); document.getElementById('welcomeBox').classList.add('hidden'); document.getElementById('dashboard').classList.remove('hidden');
+  document.getElementById('dashTitle').innerText=title; document.getElementById('welcomeEmail').innerText='Logged in as: '+currentUser; document.getElementById('roleBadge').innerText=badge;
+  document.getElementById('classBadge').innerText = currentRole==='ADMIN' ? 'ADMIN' : currentRole==='HEADMASTER' ? 'HEADMASTER' : currentRole==='FINANCE' ? 'FINANCE' : (currentTeacher && currentTeacher.assignedClass ? 'Class: '+currentTeacher.assignedClass : 'NO CLASS');
+  applyTabVisibility();
+  showTab(allowedTabs()[0] || 'students');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function doLogout(){ let p=document.getElementById('logoutPass').value.trim(); let ok=(currentRole==='ADMIN' && p===LOGINS.admin.pass) || teachers.some(t=>t.pass===p) || financePersons.some(t=>t.pass===p) || headmasters.some(t=>t.pass===p); if(!ok){ document.getElementById('logoutError').innerText='Wrong passcode!'; return; } closeAll(); setTimeout(()=>location.reload(),400); }
+function visibleStudents(){ if(!currentUser) return students; if(currentRole==='ADMIN') return students; if(currentRole==='FINANCE') return students; if(currentRole==='HEADMASTER') return []; if(currentRole==='TEACHER' && hasClass()) return students.filter(s=>s.cls===myClass()); if(currentRole==='TEACHER' && !hasClass()) return []; return students; }
+function openSubjectPopup(){ document.getElementById('subjectModal').classList.add('show'); renderSubjectPopup(); }
+function closeSubjectPopup(){ document.getElementById('subjectModal').classList.remove('show'); }
+function renderSubjectPopup(){ let q=(document.getElementById('subjectSearch').value||'').toLowerCase(); let mine=mySubjects(); let others=ALL_SUBJECTS.filter(s=>!mine.includes(s)); let ordered=[...mine,...others]; let filtered=ordered.filter(s=>s.toLowerCase().includes(q)); document.getElementById('subjectPopupList').innerHTML=filtered.map(s=>{ let isMine=mine.includes(s); return `<div class="subj-item" onclick="chooseSubject('${s}')"><span><b>${s}</b> ${isMine?'<span class="subject-chip green">My Subject</span>':''}</span><span>></span></div>`; }).join('')||'<p>No subject found.</p>'; }
+function chooseSubject(s){ document.getElementById('rSubject').value=s; closeSubjectPopup(); }
+function chooseCustomSubject(){ let v=document.getElementById('subjectCustom').value.trim(); if(!v){ alert('Type subject'); return; } document.getElementById('rSubject').value=v; if(!ALL_SUBJECTS.includes(v)) ALL_SUBJECTS.push(v); closeSubjectPopup(); }
+function renderTeacherChips(){ document.getElementById('teacherSubjectChips').innerHTML=ALL_SUBJECTS.map(s=>{ let sel=tempTeacherSubjects.includes(s); return `<button type="button" class="chip ${sel?'selected':''}" onclick="toggleTeacherSubject('${s}')">${s} ${sel?'✓':''}</button>`; }).join(''); document.getElementById('selectedTeacherSubjects').innerText=tempTeacherSubjects.length?tempTeacherSubjects.join(', '):'None yet'; }
+function toggleTeacherSubject(s){ if(tempTeacherSubjects.includes(s)) tempTeacherSubjects=tempTeacherSubjects.filter(x=>x!==s); else tempTeacherSubjects.push(s); renderTeacherChips(); }
+function renderMyChips(){ if(currentRole==='TEACHER' && currentTeacher) tempMySubjects=[...(currentTeacher.subjects||[])]; document.getElementById('mySubjectChips').innerHTML=ALL_SUBJECTS.map(s=>{ let sel=tempMySubjects.includes(s); return `<button type="button" class="chip ${sel?'selected':''}" onclick="toggleMySubject('${s}')">${s} ${sel?'✓':''}</button>`; }).join(''); document.getElementById('mySubjectsList').innerHTML=(currentRole==='TEACHER'&&currentTeacher)?(currentTeacher.subjects||[]).map(s=>`<span class="subject-chip">${s}</span>`).join(' ')||'No subjects yet':'Login as Teacher to see subjects'; document.getElementById('allSubjectsList').innerHTML=ALL_SUBJECTS.map(s=>`<span class="subject-chip green">${s}</span>`).join(' '); }
+function toggleMySubject(s){ if(tempMySubjects.includes(s)) tempMySubjects=tempMySubjects.filter(x=>x!==s); else tempMySubjects.push(s); renderMyChipsPreview(); }
+function renderMyChipsPreview(){ document.getElementById('mySubjectChips').innerHTML=ALL_SUBJECTS.map(s=>{ let sel=tempMySubjects.includes(s); return `<button type="button" class="chip ${sel?'selected':''}" onclick="toggleMySubject('${s}')">${s} ${sel?'✓':''}</button>`; }).join(''); }
+function saveMySubjects(){ if(currentRole!=='TEACHER'){ return; } let extra=document.getElementById('myNewSubject').value.trim(); if(extra){ extra.split(',').map(x=>x.trim()).filter(x=>x).forEach(x=>{ if(!tempMySubjects.includes(x)) tempMySubjects.push(x); if(!ALL_SUBJECTS.includes(x)) ALL_SUBJECTS.push(x); }); } currentTeacher.subjects=[...tempMySubjects]; currentTeacher.subject=tempMySubjects.join(', '); let idx=teachers.findIndex(t=>t.email===currentTeacher.email); if(idx>=0) teachers[idx]=currentTeacher; saveAll(); document.getElementById('myNewSubject').value=''; renderAll(); alert('Your Subjects Saved: '+tempMySubjects.join(', ')); }
+function onClassChange(){ let cls=document.getElementById('sClass').value; document.getElementById('sFees').value=classFees[cls]||0; }
+function onAdmitClassChange(){ let cls=document.getElementById('aClass').value; let fee=classFees[cls]||0; document.getElementById('aFees').value=fee; document.getElementById('admitFeeLabel').innerText='GH₵'+fee+' for '+cls; }
+function saveClassFees(){ if(currentRole!=='ADMIN'&&currentRole!=='FINANCE'&&currentRole!=='HEADMASTER'){ return; } ALL_CLASSES.forEach(cls=>{ let inp=document.getElementById('fee-'+cls.replace(/\s/g,'_')); if(inp) classFees[cls]=Number(inp.value||0); }); saveAll(); renderAll(); alert('Class Fees Saved!'); }
+function updateAllStudentsFees(){ if(currentRole!=='ADMIN'&&currentRole!=='FINANCE'&&currentRole!=='HEADMASTER'){ return; } if(!confirm('Update ALL OLD students fees to NEW Class Fees?')) return; let c=0; students.forEach(s=>{ let nf=classFees[s.cls]; if(nf!==undefined){ s.fees=nf; s.balance=nf-(s.paid||0); c++; } }); saveAll(); renderAll(); alert(`Updated ${c} students.`); }
+function addTeacher(){ if(!currentUser||currentRole!=='ADMIN'){ return; } let name=document.getElementById('tName').value.trim(); let email=document.getElementById('tEmail').value.trim(); let pass=document.getElementById('tPass').value.trim(); let cls=document.getElementById('tClass').value; let extra=document.getElementById('tSubjectExtra').value.trim(); if(!name||!email||!pass){ alert('Fill Name, Email, Password'); return; } let subs=[...tempTeacherSubjects]; if(extra){ extra.split(',').map(x=>x.trim()).filter(x=>x).forEach(x=>{ if(!subs.includes(x)) subs.push(x); if(!ALL_SUBJECTS.includes(x)) ALL_SUBJECTS.push(x); }); } teachers.push({name,email,pass,subject:subs.join(', '),subjects:subs,assignedClass:cls}); saveAll(); document.getElementById('tName').value=''; document.getElementById('tEmail').value=''; document.getElementById('tPass').value=''; document.getElementById('tSubjectExtra').value=''; tempTeacherSubjects=[]; renderTeacherChips(); renderAll(); alert(`Teacher ADDED: ${name} | Class: ${cls||'No Class'} | Subjects: ${subs.join(', ')}`); }
+function editTeacherClass(i){ let nc=prompt('CHANGE CLASS for '+teachers[i].name, teachers[i].assignedClass||''); if(nc===null) return; teachers[i].assignedClass=nc.trim(); saveAll(); renderAll(); }
+function editTeacherSubjects(i){ let cur=(teachers[i].subjects||[]).join(', '); let ns=prompt('EDIT SUBJECTS for '+teachers[i].name, cur); if(ns===null) return; let subs=ns.split(',').map(x=>x.trim()).filter(x=>x); teachers[i].subjects=subs; teachers[i].subject=subs.join(', '); subs.forEach(s=>{ if(!ALL_SUBJECTS.includes(s)) ALL_SUBJECTS.push(s); }); saveAll(); renderAll(); }
+function delTeacher(i){ if(currentRole!=='ADMIN') return; teachers.splice(i,1); saveAll(); renderAll(); }
+function addHeadmaster(){ if(!currentUser||currentRole!=='ADMIN'){ return; } let name=document.getElementById('hName').value.trim(); let email=document.getElementById('hEmail').value.trim(); let pass=document.getElementById('hPass').value.trim(); let phone=document.getElementById('hPhone').value.trim(); if(!name||!email||!pass){ alert('Fill Name, Email, Password for Headmaster'); return; } headmasters.push({name,email,pass,phone}); saveAll(); document.getElementById('hName').value=''; document.getElementById('hEmail').value=''; document.getElementById('hPass').value=''; document.getElementById('hPhone').value=''; renderAll(); alert(`HEADMASTER ADDED!\n\n${name}\nEmail: ${email}\nPassword: ${pass}`); }
+function delHeadmaster(i){ if(currentRole!=='ADMIN') return; headmasters.splice(i,1); saveAll(); renderAll(); }
+function addFinancePerson(){ if(!currentUser||currentRole!=='ADMIN'){ return; } let name=document.getElementById('fName').value.trim(); let email=document.getElementById('fEmail').value.trim(); let pass=document.getElementById('fPass').value.trim(); let phone=document.getElementById('fPhone').value.trim(); if(!name||!email||!pass){ alert('Fill Name, Email, Password'); return; } financePersons.push({name,email,pass,phone}); saveAll(); document.getElementById('fName').value=''; document.getElementById('fEmail').value=''; document.getElementById('fPass').value=''; document.getElementById('fPhone').value=''; renderAll(); alert(`FINANCE PERSON ADDED: ${name}`); }
+function delFinancePerson(i){ if(currentRole!=='ADMIN') return; financePersons.splice(i,1); saveAll(); renderAll(); }
+function admitStudent(){
+  if(!currentUser){ alert('Please login'); openLogin(); return; }
+  if(currentRole!=='ADMIN'){ return; }
+  let name=document.getElementById('aName').value.trim().toUpperCase(); let dob=document.getElementById('aDob').value; let gender=document.getElementById('aGender').value; let age=document.getElementById('aAge').value; let cls=document.getElementById('aClass').value; let guardian=document.getElementById('aGuardian').value.trim(); let phone=document.getElementById('aPhone').value.trim(); let occ=document.getElementById('aOccupation').value; let addr=document.getElementById('aAddress').value; let prevSchool=document.getElementById('aPrevSchool').value; let prevClass=document.getElementById('aPrevClass').value; let med=document.getElementById('aMedical').value; let emerg=document.getElementById('aEmergency').value; let fees=Number(document.getElementById('aFees').value||classFees[cls]||0); let paid=Number(document.getElementById('aPaid').value||0); let balance=fees-paid; let admDate=document.getElementById('aAdmDate').value; let admNo=document.getElementById('aAdmNo').value; let note=document.getElementById('aNote').value;
+  if(!name){ alert('Enter Student Name'); return; } if(!guardian){ alert('Enter Guardian Name'); return; } if(!cls){ alert('Choose CLASS THEY ARE GOING TO'); return; }
+  students.push({name,cls,guardian,phone,fees,paid,balance,dob,gender,age,occupation:occ,address:addr,prevSchool,prevClass,medical:med,emergency:emerg,admDate,admNo,note,admittedBy:currentUser,status:'Admitted'});
+  saveAll();
+  document.getElementById('aName').value=''; document.getElementById('aGuardian').value=''; document.getElementById('aPhone').value=''; document.getElementById('aPaid').value='0';
+  renderAll();
+  alert(`STUDENT ADMITTED!\n\nName: ${name}\nClass Going To: ${cls}\nGuardian: ${guardian}`);
+}
+function addStudent(){
+  if(!currentUser){ alert('Please login'); openLogin(); return; }
+  if(currentRole==='FINANCE' || currentRole==='HEADMASTER'){ return; }
+  if(currentRole==='TEACHER'&&!hasClass()){ return; }
+  let name=document.getElementById('sName').value.trim().toUpperCase(); let cls=document.getElementById('sClass').value; let guardian=document.getElementById('sGuardian').value||'Guardian'; let phone=document.getElementById('sPhone').value; let fees=Number(document.getElementById('sFees').value||classFees[cls]||0); let paid=Number(document.getElementById('sPaid').value||0); let balance=fees-paid;
+  if(!name){ alert('Enter student name'); return; } if(currentRole==='TEACHER'&&hasClass()&&cls!==myClass()){ alert('You can only add for your class: '+myClass()); return; }
+  if(currentRole==='TEACHER'){ fees=classFees[cls]||0; paid=0; balance=fees; }
+  students.push({name,cls,guardian,phone,fees,paid,balance,status:'New'}); saveAll(); document.getElementById('sName').value=''; renderAll(); alert('Student Added for '+cls);
+}
+function delStudent(i){ let vis=visibleStudents(); let real=students.indexOf(vis[i]); students.splice(real,1); saveAll(); renderAll(); }
+function updatePaid(i){ if(currentRole!=='ADMIN' && currentRole!=='FINANCE'){ return; } let vis=visibleStudents(); let real=students.indexOf(vis[i]); let np=prompt('Enter new TOTAL PAID (GH₵) for '+students[real].name+':', students[real].paid); if(np===null) return; np=Number(np); students[real].paid=np; students[real].balance=students[real].fees-np; saveAll(); renderAll(); }
+function changeFees(i){ if(currentRole!=='ADMIN' && currentRole!=='FINANCE'){ return; } let vis=visibleStudents(); let real=students.indexOf(vis[i]); let nf=prompt('CHANGE FEES for '+students[real].name+'\nOld: GH₵'+students[real].fees, students[real].fees); if(nf===null) return; nf=Number(nf); students[real].fees=nf; students[real].balance=nf-(students[real].paid||0); saveAll(); renderAll(); }
+function addPayment(){ if(currentRole!=='ADMIN'&&currentRole!=='FINANCE'){ return; } let idx=Number(document.getElementById('finStudent').value); let amt=Number(document.getElementById('finAddAmount').value||0); let date=document.getElementById('finDate').value||new Date().toISOString().slice(0,10); let note=document.getElementById('finNote').value||'Payment'; if(!amt||amt<=0){ alert('Enter payment amount'); return; } let vis=visibleStudents(); let studentName=vis[idx]?vis[idx].name:students[idx].name; let real=students.findIndex(s=>s.name===studentName); students[real].paid=(students[real].paid||0)+amt; students[real].balance=(students[real].fees||0)-students[real].paid; payments.push({student:studentName,amount:amt,date,note,by:currentUser}); saveAll(); document.getElementById('finAddAmount').value=''; document.getElementById('finNote').value=''; renderAll(); alert(`Payment Added! ${studentName} + GH₵${amt} | Balance GH₵${students[real].balance}`); }
+function getGrade(p){ if(p>=80) return 'A'; if(p>=70) return 'B'; if(p>=60) return 'C'; if(p>=50) return 'D'; if(p>=40) return 'E'; return 'F'; }
+function getGradeClass(g){ if(g==='A') return 'grade-A'; if(g==='B') return 'grade-B'; if(g==='C') return 'grade-C'; return 'grade-F'; }
+function calcTotal(){ let mid=Number(document.getElementById('rMid').value||0); let end=Number(document.getElementById('rEnd').value||0); let total=mid+end; document.getElementById('calcBox').innerText=`Total: ${total} / 100 | Percentage: ${total}% | Grade: ${getGrade(total)}`; }
+function addReport(){ if(!currentUser){ alert('Login'); openLogin(); return; } if(currentRole==='FINANCE' || currentRole==='HEADMASTER'){ return; } let student=document.getElementById('rStudent').value; let term=document.getElementById('rTerm').value; let subject=document.getElementById('rSubject').value.trim(); let mid=Number(document.getElementById('rMid').value||0); let end=Number(document.getElementById('rEnd').value||0); let tC=document.getElementById('rTeacherComment').value; let hC=document.getElementById('rHeadComment').value; if(!subject){ alert('Click Subject box to choose a subject!'); openSubjectPopup(); return; } if(mid>30){ alert('Mid max 30'); return; } if(end>70){ alert('End max 70'); return; } let total=mid+end; reports.push({student,term,subject,mid,end,total,perc:total,grade:getGrade(total),tComment:tC,hComment:hC}); saveAll(); renderAll(); document.getElementById('rSubject').value=''; document.getElementById('rMid').value=''; document.getElementById('rEnd').value=''; alert('Report Saved for '+subject); }
+function delReport(i){ reports.splice(i,1); saveAll(); renderAll(); }
+function clearReports(){ if(confirm('Delete ALL reports?')){ reports=[]; saveAll(); renderAll(); } }
+function markAtt(i,s){ if(currentRole==='HEADMASTER'){ return; } attendance[i]=s; saveAll(); renderAll(); }
+function saveAttendance(){ document.getElementById('attMsg').innerText='Attendance Saved'; }
+function updateOverall(){
+  let vis=visibleStudents();
+  let totalFees=students.reduce((a,s)=>a+(s.fees||0),0); let totalPaid=students.reduce((a,s)=>a+(s.paid||0),0);
+  document.getElementById('overallTeachers').innerText=teachers.length;
+  document.getElementById('overallStudents').innerText=students.length;
+  document.getElementById('overallPaid').innerText='GH₵'+totalPaid.toLocaleString();
+  document.getElementById('overallExpected').innerText='GH₵'+totalFees.toLocaleString();
+  document.getElementById('overallReports').innerText=reports.length;
+  document.getElementById('overallFinanceStudents').innerText=students.length;
+  document.getElementById('overallFinancePaid').innerText='GH₵'+totalPaid.toLocaleString();
+  document.getElementById('overallFinanceExpected').innerText='GH₵'+totalFees.toLocaleString();
+  document.getElementById('overallTeacherStudents').innerText=vis.length;
+  document.getElementById('overallTeacherReports').innerText=reports.length;
+  // Headmaster overall - Total Student, Total Teacher, Total Fees, Finance
+  document.getElementById('overallHeadStudents').innerText=students.length;
+  document.getElementById('overallHeadTeachers').innerText=teachers.length;
+  document.getElementById('overallHeadTotalFees').innerText='GH₵'+totalFees.toLocaleString();
+  document.getElementById('overallHeadPaid').innerText='GH₵'+totalPaid.toLocaleString();
+  let present=0, absent=0;
+  Object.values(attendance).forEach(v=>{ if(v==='Present') present++; if(v==='Absent') absent++; });
+  document.getElementById('overallHeadPresent').innerText=present;
+  document.getElementById('overallHeadAbsent').innerText=absent;
+  document.getElementById('overallTitle').innerText = currentRole==='HEADMASTER' ? 'ATTENDANCE - OVERALL' : 'MULBERRIES SCHOOL - OVERALL';
+}
+function renderAll(){
+  updateOverall();
+  applyTabVisibility();
+  let vis=visibleStudents();
+  document.getElementById('studentCount').innerText=vis.length;
+  let classOptions=ALL_CLASSES.map(c=>`<option>${c}</option>`).join('');
+  let tClassEl=document.getElementById('tClass'); let curT=tClassEl.value; tClassEl.innerHTML='<option value="">-- No Class (Reports Only) --</option>'+classOptions; if(curT) tClassEl.value=curT;
+  let sClassEl=document.getElementById('sClass'); let curS=sClassEl.value||'Class 6'; sClassEl.innerHTML=classOptions; sClassEl.value=curS; if(!sClassEl.value) sClassEl.value='Class 6';
+  let aClassEl=document.getElementById('aClass'); let curA=aClassEl.value||'Class 1'; aClassEl.innerHTML=classOptions; aClassEl.value=curA; if(!aClassEl.value) aClassEl.value='Class 1'; onAdmitClassChange();
+  let canEdit=(currentRole==='ADMIN'||currentRole==='FINANCE'||currentRole==='HEADMASTER');
+  document.getElementById('classFeesList').innerHTML=ALL_CLASSES.map(cls=>{ let count=students.filter(s=>s.cls===cls).length; return `<div style="flex:1;min-width:180px;background:white;border:2px solid #EDE7F6;border-radius:16px;padding:14px;"><b>${cls}</b><p style="font-size:12px;color:#888;">${count} students</p><label>Fee (GH₵)</label><input type="number" id="fee-${cls.replace(/\s/g,'_')}" value="${classFees[cls]||0}" ${canEdit?'':'disabled'}></div>`; }).join('');
+  document.getElementById('classFeesSummary').innerText=`Total Classes: ${ALL_CLASSES.length} (Creche to JHS 3) | Creche GH₵${classFees['Creche']} | KG 1 GH₵${classFees['KG 1']} | Class 6 GH₵${classFees['Class 6']} | JHS 3 GH₵${classFees['JHS 3']}`;
+  document.getElementById('teacherList').innerHTML=teachers.map((t,i)=>{ let has=t.assignedClass?`<span style="background:#D4EDDA;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:bold;">Class: ${t.assignedClass}</span>`:`<span style="background:#F8D7DA;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:bold;">No Class</span>`; let subs=(t.subjects||[]).map(s=>`<span class="subject-chip">${s}</span>`).join(' ')||'No subjects'; return `<div class="card"><div><b>${t.name}</b><br><small>${t.email} - Pass: ${t.pass}</small><br>${has}<br><div style="margin-top:6px;">Subjects: ${subs}</div></div><div><button class="small-btn" style="background:#5B2A86;" onclick="editTeacherClass(${i})">Change Class</button> <button class="small-btn" style="background:#00A651;" onclick="editTeacherSubjects(${i})">Edit Subjects</button> <button class="small-btn" style="background:#D32F2F;" onclick="delTeacher(${i})">Delete</button></div></div>`; }).join('')||'<p>No teachers</p>';
+  document.getElementById('headmasterList').innerHTML=headmasters.map((h,i)=>`<div class="card"><div><b>${h.name}</b><br><small>${h.email} - Pass: ${h.pass} - ${h.phone||''}</small></div><div><button class="small-btn" style="background:#D32F2F;" onclick="delHeadmaster(${i})">Delete</button></div></div>`).join('')||'<p>No headmasters</p>';
+  document.getElementById('financePersonList').innerHTML=financePersons.map((f,i)=>`<div class="card"><div><b>${f.name}</b><br><small>${f.email} - Pass: ${f.pass}</small></div><div><button class="small-btn" style="background:#D32F2F;" onclick="delFinancePerson(${i})">Delete</button></div></div>`).join('')||'<p>No finance persons</p>';
+  document.getElementById('admittedList').innerHTML=students.slice().reverse().slice(0,5).map(s=>`<div class="card"><div><b>${s.name}</b> - Going to <b>${s.cls}</b><br><small>Guardian: ${s.guardian} - ${s.phone} - Fees GH₵${s.fees} - Paid GH₵${s.paid} - Balance GH₵${s.balance}</small></div></div>`).join('')||'<p>No admitted students yet.</p>';
+  if(currentRole==='TEACHER'){
+    document.getElementById('studentList').innerHTML=vis.map((s,i)=>`<div class="card"><div><b>${s.name}</b> <span style="background:#EDE7F6;padding:3px 8px;border-radius:10px;font-size:11px;">${s.cls}</span><br><small>Guardian: ${s.guardian} - Phone: ${s.phone||'-'}</small></div><div><button class="small-btn" style="background:#D32F2F;" onclick="delStudent(${i})">Delete</button></div></div>`).join('')||'<p>No students.</p>';
+  } else {
+    document.getElementById('studentList').innerHTML=vis.map((s,i)=>`<div class="card"><div><b>${s.name}</b> <span style="background:#EDE7F6;padding:3px 8px;border-radius:10px;font-size:11px;">${s.cls}</span><br><small>Guardian: ${s.guardian} - Phone: ${s.phone||'-'} - Fees GH₵${s.fees} - Paid GH₵${s.paid} - Balance GH₵${s.balance}</small></div><div><button class="small-btn" style="background:#00A651;" onclick="updatePaid(${i})">Update Paid</button> <button class="small-btn" style="background:#FF8A00;" onclick="changeFees(${i})">Change Fees</button> <button class="small-btn" style="background:#D32F2F;" onclick="delStudent(${i})">Delete</button></div></div>`).join('')||'<p>No students.</p>';
+  }
+  document.getElementById('attendanceList').innerHTML=vis.map((s,i)=>`<div class="card"><span>${s.name} - ${s.cls}</span><span><button class="small-btn" style="background:green;" onclick="markAtt(${i},'Present')">Present</button> <button class="small-btn" style="background:#D32F2F;" onclick="markAtt(${i},'Absent')">Absent</button> <b id="att-${i}">${attendance[i]||''}</b></span></div>`).join('')||'<p>No learners.</p>';
+  let summary = ALL_CLASSES.map(cls=>{
+    let clsStudents = students.filter(s=>s.cls===cls);
+    let idxs = [];
+    students.forEach((s,idx)=>{ if(s.cls===cls) idxs.push(idx); });
+    let present = idxs.filter(idx=>attendance[idx]==='Present').length;
+    let absent = idxs.filter(idx=>attendance[idx]==='Absent').length;
+    return `<tr><td><b>${cls}</b></td><td>${clsStudents.length}</td><td style="color:green;font-weight:bold;">${present}</td><td style="color:#D32F2F;font-weight:bold;">${absent}</td></tr>`;
+  }).join('');
+  document.getElementById('attendanceSummaryTable').innerHTML=summary;
+  let fe=vis.reduce((a,s)=>a+(s.fees||0),0); let pa=vis.reduce((a,s)=>a+(s.paid||0),0); let ba=vis.reduce((a,s)=>a+(s.balance||0),0); document.getElementById('finSummary').innerText=`Total Fees: GH₵${fe.toFixed(2)} | Paid: GH₵${pa.toFixed(2)} | Balance: GH₵${ba.toFixed(2)}`;
+  document.getElementById('financeTable').innerHTML=vis.map((s,i)=>`<tr><td><b>${s.name}</b></td><td>${s.cls}</td><td>${s.guardian||'-'}</td><td>GH₵${(s.fees||0).toFixed(2)}</td><td style="color:green;font-weight:bold;">GH₵${(s.paid||0).toFixed(2)}</td><td style="color:${(s.balance||0)>0?'#C0392B':'green'};font-weight:bold;">GH₵${(s.balance||0).toFixed(2)}</td><td>${(s.balance||0)===0?'Paid Full':'Owes'}</td><td class="no-print"><button class="small-btn" style="background:#00A651;" onclick="updatePaid(${i})">Update Paid</button> <button class="small-btn" style="background:#FF8A00;" onclick="changeFees(${i})">Change Fees</button></td></tr>`).join('')||'<tr><td colspan="8" style="text-align:center;">No finance data.</td></tr>';
+  document.getElementById('finStudent').innerHTML=vis.map((s,i)=>`<option value="${i}">${s.name} (${s.cls}) - Paid GH₵${s.paid} / Balance GH₵${s.balance}</option>`).join('')||'<option>No Student</option>';
+  document.getElementById('paymentHistory').innerHTML=payments.slice().reverse().map(p=>`<div class="card"><div><b>${p.student}</b><br><small>${p.date} - ${p.note} - By ${p.by}</small></div><div><b style="color:green;">+ GH₵${p.amount}</b></div></div>`).join('')||'<p>No payments yet.</p>';
+  document.getElementById('rStudent').innerHTML=students.map(s=>`<option>${s.name} (${s.cls})</option>`).join('')||'<option>No Student</option>';
+  let mine=mySubjects(); document.getElementById('quickSubjects').innerHTML=mine.slice(0,8).map(s=>`<button type="button" class="chip" onclick="chooseSubject('${s}')">${s}</button>`).join('')+`<button type="button" class="chip" style="background:#FFD93D;" onclick="openSubjectPopup()">+ All Subjects</button>`;
+  document.getElementById('reportTable').innerHTML=reports.map((r,i)=>`<tr><td><b>${r.student}</b></td><td>${r.term}</td><td>${r.subject}</td><td style="text-align:center;">${r.mid}</td><td style="text-align:center;">${r.end}</td><td style="text-align:center;"><b>${r.total}</b></td><td style="text-align:center;"><b>${r.perc}%</b></td><td class="${getGradeClass(r.grade)}">${r.grade}</td><td>${r.tComment||'-'}</td><td>${r.hComment||'-'}</td><td class="no-print"><button class="small-btn" style="background:#D32F2F;" onclick="delReport(${i})">Delete</button></td></tr>`).join('')||'<tr><td colspan="11" style="text-align:center;">No reports yet</td></tr>';
+  if(reports.length>0){ let avg=(reports.reduce((a,r)=>a+r.perc,0)/reports.length).toFixed(1); document.getElementById('classAverage').innerText=`Class Average: ${avg}% - Reports: ${reports.length} - Grade: ${getGrade(Number(avg))}`; }
+  renderTeacherChips(); renderMyChips();
+}
+document.getElementById('finDate').value=new Date().toISOString().slice(0,10); document.getElementById('aAdmDate').value=new Date().toISOString().slice(0,10);
+onClassChange(); renderAll();
+</script>
+</body>
+</html>
